@@ -13,8 +13,19 @@ export const guestRegex = /^guest-\d+$/;
 export const DUMMY_PASSWORD = generateDummyPassword();
 
 export const suggestions = [
-  "Log my weight today",
-  "How am I progressing toward my goal?",
-  "Log today's meals and exercise",
-  "Set a new weight loss goal",
+  // Cycle 1
+  "Log my weight",
+  "What should I eat?",
+  "Track my water",
+  "Log a workout",
+  // Cycle 2
+  "Show my progress",
+  "Set a goal",
+  "Calculate my BMI",
+  "Daily check-in",
+  // Cycle 3
+  "Log my calories",
+  "Meal ideas for lunch",
+  "How did I sleep?",
+  "Body measurements",
 ];
