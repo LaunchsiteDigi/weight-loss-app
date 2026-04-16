@@ -21,18 +21,24 @@ export async function proxy(request: NextRequest) {
 
   const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
+  // Let unauthenticated users access login/register without guest redirect
+  if (["/login", "/register"].includes(pathname)) {
+    if (token) {
+      const isGuest = guestRegex.test(token?.email ?? "");
+      // Only redirect non-guests away from auth pages
+      if (!isGuest) {
+        return NextResponse.redirect(new URL(`${base}/`, request.url));
+      }
+    }
+    return NextResponse.next();
+  }
+
   if (!token) {
     const redirectUrl = encodeURIComponent(new URL(request.url).pathname);
 
     return NextResponse.redirect(
       new URL(`${base}/api/auth/guest?redirectUrl=${redirectUrl}`, request.url)
     );
-  }
-
-  const isGuest = guestRegex.test(token?.email ?? "");
-
-  if (token && !isGuest && ["/login", "/register"].includes(pathname)) {
-    return NextResponse.redirect(new URL(`${base}/`, request.url));
   }
 
   return NextResponse.next();

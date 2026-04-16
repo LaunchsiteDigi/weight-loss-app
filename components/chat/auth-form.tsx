@@ -41,6 +41,9 @@ export function AuthForm({
   };
 
   const handleSubmit = (formData: FormData) => {
+    const digits = phoneDisplay.replace(/\D/g, "");
+    if (digits.length < 10) return;
+
     const newFormData = new FormData();
     newFormData.set("phone", toE164(phoneDisplay));
     if (isRegister) {
