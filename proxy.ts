@@ -21,24 +21,31 @@ export async function proxy(request: NextRequest) {
 
   const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
-  // Let unauthenticated users access login/register without guest redirect
+  // Root "/" is the public signup landing page - no auth needed
+  if (pathname === "/") {
+    return NextResponse.next();
+  }
+
+  // Let unauthenticated users access login/register
   if (["/login", "/register"].includes(pathname)) {
     if (token) {
       const isGuest = guestRegex.test(token?.email ?? "");
-      // Only redirect non-guests away from auth pages
       if (!isGuest) {
-        return NextResponse.redirect(new URL(`${base}/`, request.url));
+        return NextResponse.redirect(new URL(`${base}/demo`, request.url));
       }
     }
     return NextResponse.next();
   }
 
+  // /demo and all app routes require auth - auto guest if not logged in
   if (!token) {
-    const redirectUrl = encodeURIComponent(new URL(request.url).pathname);
-
-    return NextResponse.redirect(
-      new URL(`${base}/api/auth/guest?redirectUrl=${redirectUrl}`, request.url)
-    );
+    if (pathname.startsWith("/demo")) {
+      return NextResponse.redirect(
+        new URL(`${base}/api/auth/guest?redirectUrl=${encodeURIComponent(pathname)}`, request.url)
+      );
+    }
+    // Other protected routes redirect to register
+    return NextResponse.redirect(new URL(`${base}/register`, request.url));
   }
 
   return NextResponse.next();
@@ -47,11 +54,12 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     "/",
+    "/demo/:path*",
     "/chat/:id",
     "/api/:path*",
     "/login",
     "/register",
-
+    "/settings",
     "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
   ],
 };

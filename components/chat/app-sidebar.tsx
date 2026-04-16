@@ -239,7 +239,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                       tooltip="Connections"
                     >
                       <Link
-                        href="/settings"
+                        href="/demo/settings"
                         onClick={() => setOpenMobile(false)}
                       >
                         <LinkIcon className="size-3.5" />
@@ -264,14 +264,14 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                     <SidebarMenuButton
                       asChild
                       className={`h-7 rounded-lg text-[13px] transition-colors duration-150 ${
-                        pathname === "/settings"
+                        pathname === "/demo/settings"
                           ? "text-sidebar-foreground bg-sidebar-accent/50"
                           : "text-sidebar-foreground/60 hover:text-sidebar-foreground"
                       }`}
                       tooltip="Settings"
                     >
                       <Link
-                        href="/settings"
+                        href="/demo/settings"
                         onClick={() => setOpenMobile(false)}
                       >
                         <SettingsIcon className="size-3.5" />

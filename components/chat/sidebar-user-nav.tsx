@@ -78,7 +78,7 @@ export function SidebarUserNav({ user }: { user: User }) {
           >
             <DropdownMenuItem
               className="cursor-pointer text-[13px]"
-              onSelect={() => router.push("/settings")}
+              onSelect={() => router.push("/demo/settings")}
             >
               Settings
             </DropdownMenuItem>
