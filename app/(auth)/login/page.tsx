@@ -5,17 +5,33 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useActionState, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, ScaleIcon } from "lucide-react";
-import { DotCanvas } from "@/components/chat/dot-canvas";
-import { AuthForm } from "@/components/chat/auth-form";
+import {
+  ArrowRight,
+  ScaleIcon,
+  CheckCircleIcon,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { toast } from "@/components/chat/toast";
 import { type LoginActionState, login } from "../actions";
 
+function formatPhone(value: string): string {
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+  if (digits.length === 0) return "";
+  if (digits.length <= 3) return `(${digits}`;
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
+
+function toE164(formatted: string): string {
+  const digits = formatted.replace(/\D/g, "");
+  if (digits.length === 10) return `+1${digits}`;
+  return `+${digits}`;
+}
+
 export default function Page() {
   const router = useRouter();
-  const [phone, setPhone] = useState("");
+  const [phoneDisplay, setPhoneDisplay] = useState("");
   const [isSuccessful, setIsSuccessful] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
   const [state, formAction] = useActionState<LoginActionState, FormData>(
     login,
@@ -43,101 +59,104 @@ export default function Page() {
     }
   }, [state.status]);
 
-  const handleSubmit = (formData: FormData) => {
-    setPhone(formData.get("phone") as string);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const digits = phoneDisplay.replace(/\D/g, "");
+    if (digits.length < 10) return;
+
+    const formData = new FormData();
+    formData.set("phone", toE164(phoneDisplay));
     formAction(formData);
   };
 
   return (
-    <div className="flex w-full items-center justify-center p-4">
+    <div className="flex min-h-dvh w-full items-center justify-center bg-[#f7fafc] px-6 dark:bg-background">
       <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex w-full max-w-4xl overflow-hidden rounded-2xl border border-border/50 bg-card shadow-xl"
+        className="w-full max-w-md"
       >
-        {/* Left - Animated canvas */}
-        <div className="relative hidden w-1/2 overflow-hidden md:block">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/10">
-            <DotCanvas />
+        {/* Logo */}
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
+            <ScaleIcon className="size-7" />
           </div>
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-8">
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
-              className="mb-6"
-            >
-              <div className="flex size-14 items-center justify-center rounded-2xl bg-primary shadow-lg">
-                <ScaleIcon className="size-7 text-primary-foreground" />
-              </div>
-            </motion.div>
-            <motion.h2
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.5 }}
-              className="mb-2 text-center text-3xl font-bold text-foreground"
-            >
-              Weight Loss Coach
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.5 }}
-              className="max-w-xs text-center text-sm text-muted-foreground"
-            >
-              Track your journey, set goals, and get daily coaching via AI and iMessage
-            </motion.p>
-          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            SlimZero
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Your AI weight loss coach
+          </p>
         </div>
 
-        {/* Right - Sign In Form */}
-        <div className="flex w-full flex-col justify-center p-8 md:w-1/2 md:p-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h1 className="mb-1 text-2xl font-bold text-foreground md:text-3xl">
-              Welcome back
-            </h1>
-            <p className="mb-8 text-muted-foreground">
-              Sign in with your phone number
-            </p>
+        {/* Form Card */}
+        <div className="rounded-2xl border-2 border-border/50 bg-card p-8 shadow-lg">
+          <h2 className="mb-1 text-2xl font-bold text-foreground">
+            Welcome back
+          </h2>
+          <p className="mb-8 text-sm text-muted-foreground">
+            Sign in with your phone number
+          </p>
 
-            <AuthForm action={handleSubmit} defaultPhone={phone}>
-              <motion.div
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.98 }}
-                onHoverStart={() => setIsHovered(true)}
-                onHoverEnd={() => setIsHovered(false)}
-                className="pt-2"
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label
+                htmlFor="phone"
+                className="mb-1.5 block text-sm font-medium text-foreground"
               >
-                <button
-                  type="submit"
-                  disabled={isSuccessful}
-                  className={`relative w-full overflow-hidden rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition-all duration-300 hover:opacity-90 disabled:opacity-50 ${
-                    isHovered ? "shadow-lg" : ""
-                  }`}
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    {isSuccessful ? "Signing in..." : "Sign in"}
-                    <ArrowRight className="size-4" />
-                  </span>
-                </button>
-              </motion.div>
-
-              <p className="mt-6 text-center text-[13px] text-muted-foreground">
-                {"No account? "}
-                <Link
-                  className="font-medium text-primary hover:underline"
-                  href="/register"
-                >
-                  Sign up
-                </Link>
+                Phone Number <span className="text-primary">*</span>
+              </label>
+              <Input
+                id="phone"
+                type="tel"
+                autoComplete="tel"
+                autoFocus
+                value={phoneDisplay}
+                onChange={(e) => setPhoneDisplay(formatPhone(e.target.value))}
+                placeholder="(415) 555-2671"
+                required
+                className="h-11 rounded-xl border-border bg-muted/50 text-sm"
+              />
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                US number, no country code needed
               </p>
-            </AuthForm>
-          </motion.div>
+            </div>
+
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              className="pt-2"
+            >
+              <button
+                type="submit"
+                disabled={isSuccessful}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-md transition-all hover:opacity-90 disabled:opacity-50"
+              >
+                {isSuccessful ? (
+                  <>
+                    <CheckCircleIcon className="size-4" />
+                    Signing in...
+                  </>
+                ) : (
+                  <>
+                    Sign in
+                    <ArrowRight className="size-4" />
+                  </>
+                )}
+              </button>
+            </motion.div>
+          </form>
+
+          <p className="mt-6 text-center text-[13px] text-muted-foreground">
+            {"No account? "}
+            <Link
+              className="font-semibold text-primary hover:underline"
+              href="/register"
+            >
+              Sign up
+            </Link>
+          </p>
         </div>
       </motion.div>
     </div>
