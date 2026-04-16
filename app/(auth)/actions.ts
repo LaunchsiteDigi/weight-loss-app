@@ -1,14 +1,22 @@
 "use server";
 
 import { z } from "zod";
-
-import { createUser, getUser } from "@/lib/db/queries";
-
 import { signIn } from "./auth";
 
-const authFormSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+const phoneSchema = z.object({
+  phone: z
+    .string()
+    .min(10, "Phone number is required")
+    .regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number format"),
+});
+
+const registerSchema = z.object({
+  phone: z
+    .string()
+    .min(10, "Phone number is required")
+    .regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number format"),
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email"),
 });
 
 export type LoginActionState = {
@@ -20,16 +28,19 @@ export const login = async (
   formData: FormData
 ): Promise<LoginActionState> => {
   try {
-    const validatedData = authFormSchema.parse({
-      email: formData.get("email"),
-      password: formData.get("password"),
+    const validatedData = phoneSchema.parse({
+      phone: formData.get("phone"),
     });
 
-    await signIn("credentials", {
-      email: validatedData.email,
-      password: validatedData.password,
+    const result = await signIn("phone", {
+      phone: validatedData.phone,
+      isRegister: "false",
       redirect: false,
     });
+
+    if (!result) {
+      return { status: "failed" };
+    }
 
     return { status: "success" };
   } catch (error) {
@@ -56,20 +67,17 @@ export const register = async (
   formData: FormData
 ): Promise<RegisterActionState> => {
   try {
-    const validatedData = authFormSchema.parse({
+    const validatedData = registerSchema.parse({
+      phone: formData.get("phone"),
+      name: formData.get("name"),
       email: formData.get("email"),
-      password: formData.get("password"),
     });
 
-    const [user] = await getUser(validatedData.email);
-
-    if (user) {
-      return { status: "user_exists" } as RegisterActionState;
-    }
-    await createUser(validatedData.email, validatedData.password);
-    await signIn("credentials", {
+    await signIn("phone", {
+      phone: validatedData.phone,
+      name: validatedData.name,
       email: validatedData.email,
-      password: validatedData.password,
+      isRegister: "true",
       redirect: false,
     });
 

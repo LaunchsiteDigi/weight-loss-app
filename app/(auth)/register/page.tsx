@@ -11,7 +11,7 @@ import { type RegisterActionState, register } from "../actions";
 
 export default function Page() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [isSuccessful, setIsSuccessful] = useState(false);
 
   const [state, formAction] = useActionState<RegisterActionState, FormData>(
@@ -30,7 +30,7 @@ export default function Page() {
     } else if (state.status === "invalid_data") {
       toast({
         type: "error",
-        description: "Failed validating your submission!",
+        description: "Please fill in all fields correctly!",
       });
     } else if (state.status === "success") {
       toast({ type: "success", description: "Account created!" });
@@ -41,15 +41,19 @@ export default function Page() {
   }, [state.status]);
 
   const handleSubmit = (formData: FormData) => {
-    setEmail(formData.get("email") as string);
+    setPhone(formData.get("phone") as string);
     formAction(formData);
   };
 
   return (
     <>
-      <h1 className="text-2xl font-semibold tracking-tight">Create account</h1>
-      <p className="text-sm text-muted-foreground">Get started for free</p>
-      <AuthForm action={handleSubmit} defaultEmail={email}>
+      <h1 className="text-2xl font-semibold tracking-tight">
+        Start your journey
+      </h1>
+      <p className="text-sm text-muted-foreground">
+        Create your account with your phone number
+      </p>
+      <AuthForm action={handleSubmit} defaultPhone={phone} isRegister>
         <SubmitButton isSuccessful={isSuccessful}>Sign up</SubmitButton>
         <p className="text-center text-[13px] text-muted-foreground">
           {"Have an account? "}

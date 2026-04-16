@@ -15,6 +15,13 @@
       "when": 1776301877071,
       "tag": "0001_windy_medusa",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1776302323576,
+      "tag": "0002_nice_loki",
+      "breakpoints": true
     }
   ]
 }

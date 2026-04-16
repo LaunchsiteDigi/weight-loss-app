@@ -1,9 +1,11 @@
-import { compare } from "bcrypt-ts";
 import NextAuth, { type DefaultSession } from "next-auth";
 import type { DefaultJWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
-import { DUMMY_PASSWORD } from "@/lib/constants";
-import { createGuestUser, getUser } from "@/lib/db/queries";
+import {
+  createGuestUser,
+  getUserByPhoneNumber,
+  createUserWithPhone,
+} from "@/lib/db/queries";
 import { authConfig } from "./auth.config";
 
 export type UserType = "guest" | "regular";
@@ -39,34 +41,40 @@ export const {
   ...authConfig,
   providers: [
     Credentials({
+      id: "phone",
       credentials: {
+        phone: { label: "Phone", type: "tel" },
+        name: { label: "Name", type: "text" },
         email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+        isRegister: { label: "Register", type: "text" },
       },
       async authorize(credentials) {
-        const email = String(credentials.email ?? "");
-        const password = String(credentials.password ?? "");
-        const users = await getUser(email);
+        const phone = String(credentials.phone ?? "").trim();
+        const isRegister = credentials.isRegister === "true";
 
-        if (users.length === 0) {
-          await compare(password, DUMMY_PASSWORD);
-          return null;
+        if (!phone) return null;
+
+        if (isRegister) {
+          const name = String(credentials.name ?? "").trim();
+          const email = String(credentials.email ?? "").trim();
+
+          if (!name || !email) return null;
+
+          // Check if phone already exists
+          const existing = await getUserByPhoneNumber(phone);
+          if (existing) {
+            return { ...existing, type: "regular" };
+          }
+
+          const newUser = await createUserWithPhone({ phone, name, email });
+          return { ...newUser, type: "regular" };
         }
 
-        const [user] = users;
+        // Login: look up by phone
+        const existingUser = await getUserByPhoneNumber(phone);
+        if (!existingUser) return null;
 
-        if (!user.password) {
-          await compare(password, DUMMY_PASSWORD);
-          return null;
-        }
-
-        const passwordsMatch = await compare(password, user.password);
-
-        if (!passwordsMatch) {
-          return null;
-        }
-
-        return { ...user, type: "regular" };
+        return { ...existingUser, type: "regular" };
       },
     }),
     Credentials({

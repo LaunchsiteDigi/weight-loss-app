@@ -51,11 +51,43 @@ export async function getUser(email: string): Promise<User[]> {
   }
 }
 
+export async function getUserByPhoneNumber(phone: string): Promise<User | null> {
+  try {
+    const [found] = await db.select().from(user).where(eq(user.phone, phone));
+    return found ?? null;
+  } catch (_error) {
+    throw new ChatbotError(
+      "bad_request:database",
+      "Failed to get user by phone"
+    );
+  }
+}
+
 export async function createUser(email: string, password: string) {
   const hashedPassword = generateHashedPassword(password);
 
   try {
     return await db.insert(user).values({ email, password: hashedPassword });
+  } catch (_error) {
+    throw new ChatbotError("bad_request:database", "Failed to create user");
+  }
+}
+
+export async function createUserWithPhone({
+  phone,
+  name,
+  email,
+}: {
+  phone: string;
+  name: string;
+  email: string;
+}) {
+  try {
+    const [newUser] = await db
+      .insert(user)
+      .values({ phone, name, email })
+      .returning();
+    return newUser;
   } catch (_error) {
     throw new ChatbotError("bad_request:database", "Failed to create user");
   }
