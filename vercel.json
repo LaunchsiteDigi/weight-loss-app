@@ -1,0 +1,9 @@
+{
+  "framework": "nextjs",
+  "crons": [
+    {
+      "path": "/api/cron/daily-checkin",
+      "schedule": "0 18 * * *"
+    }
+  ]
+}
