@@ -21,19 +21,8 @@ export async function proxy(request: NextRequest) {
 
   const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
-  // Root "/" is the public signup landing page - no auth needed
-  if (pathname === "/") {
-    return NextResponse.next();
-  }
-
-  // Let unauthenticated users access login/register
-  if (["/login", "/register"].includes(pathname)) {
-    if (token) {
-      const isGuest = guestRegex.test(token?.email ?? "");
-      if (!isGuest) {
-        return NextResponse.redirect(new URL(`${base}/demo`, request.url));
-      }
-    }
+  // Public pages - no auth needed
+  if (pathname === "/" || ["/login", "/register"].includes(pathname)) {
     return NextResponse.next();
   }
 
