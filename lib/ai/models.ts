@@ -1,4 +1,4 @@
-export const DEFAULT_CHAT_MODEL = "meta-llama/llama-3.3-70b-instruct:free";
+export const DEFAULT_CHAT_MODEL = "google/gemma-3-27b-it:free";
 
 export const titleModel = {
   id: "google/gemma-3-27b-it:free",
@@ -22,16 +22,16 @@ export type ChatModel = {
 
 export const chatModels: ChatModel[] = [
   {
-    id: "meta-llama/llama-3.3-70b-instruct:free",
-    name: "Llama 3.3 70B",
-    provider: "meta",
-    description: "Best free model for coaching with tool support",
-  },
-  {
     id: "google/gemma-3-27b-it:free",
     name: "Gemma 3 27B",
     provider: "google",
-    description: "Fast and capable alternative",
+    description: "Fast and capable with tool support",
+  },
+  {
+    id: "meta-llama/llama-3.3-70b-instruct:free",
+    name: "Llama 3.3 70B",
+    provider: "meta",
+    description: "Large model for complex coaching",
   },
   {
     id: "mistralai/mistral-small-3.1-24b-instruct:free",

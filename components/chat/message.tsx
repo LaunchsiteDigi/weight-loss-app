@@ -18,6 +18,7 @@ import { DocumentPreview } from "./document-preview";
 import { SparklesIcon } from "./icons";
 import { MessageActions } from "./message-actions";
 import { MessageReasoning } from "./message-reasoning";
+import { renderToolResult } from "./tool-results";
 import { PreviewAttachment } from "./preview-attachment";
 import { Weather } from "./weather";
 
@@ -299,6 +300,36 @@ const PurePreviewMessage = ({
           </ToolContent>
         </Tool>
       );
+    }
+
+    // Weight loss tool results
+    if (type.startsWith("tool-")) {
+      const toolName = type.replace("tool-", "");
+      const toolPart = part as { toolCallId: string; state: string; output?: unknown; input?: unknown };
+
+      if (toolPart.state === "output-available" && toolPart.output) {
+        const richResult = renderToolResult(toolName, toolPart.output);
+        if (richResult) {
+          return (
+            <div className="w-[min(100%,400px)]" key={toolPart.toolCallId}>
+              {richResult}
+            </div>
+          );
+        }
+      }
+
+      if (toolPart.state === "input-available" || toolPart.state === "input-streaming") {
+        return (
+          <div className="w-[min(100%,400px)]" key={toolPart.toolCallId}>
+            <div className="flex items-center gap-2 rounded-xl border border-border/50 bg-card px-4 py-3">
+              <div className="size-4 animate-pulse rounded-full bg-primary/20" />
+              <span className="text-xs text-muted-foreground">
+                Working on it...
+              </span>
+            </div>
+          </div>
+        );
+      }
     }
 
     return null;

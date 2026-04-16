@@ -95,7 +95,14 @@ export function AppSidebar({ user }: { user: User | undefined }) {
 
   const handleQuickAction = (prompt: string) => {
     setOpenMobile(false);
-    router.push(`/?q=${encodeURIComponent(prompt)}`);
+    // Set the prompt into the chat input via a custom event
+    window.dispatchEvent(
+      new CustomEvent("coach-quick-action", { detail: { prompt } })
+    );
+    // Navigate to home if not already there
+    if (pathname !== "/") {
+      router.push("/");
+    }
   };
 
   return (

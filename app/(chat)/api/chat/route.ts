@@ -279,8 +279,18 @@ export async function POST(request: Request) {
         }
       },
       onError: (error) => {
-        console.error("Chat error:", error);
-        return "Oops, an error occurred!";
+        console.error("Chat stream error:", {
+          message: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
+          model: chatModel,
+        });
+        if (
+          error instanceof Error &&
+          error.message?.includes("rate limit")
+        ) {
+          return "Rate limited by the AI provider. Please try again in a moment.";
+        }
+        return "Oops, an error occurred! Please try again.";
       },
     });
 

@@ -127,6 +127,26 @@ function PureMultimodalInput({
     ""
   );
 
+  // Listen for sidebar quick action events
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.prompt) {
+        window.history.pushState(
+          {},
+          "",
+          `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/chat/${chatId}`
+        );
+        sendMessage({
+          role: "user",
+          parts: [{ type: "text", text: detail.prompt }],
+        });
+      }
+    };
+    window.addEventListener("coach-quick-action", handler);
+    return () => window.removeEventListener("coach-quick-action", handler);
+  }, [chatId, sendMessage]);
+
   useEffect(() => {
     if (textareaRef.current) {
       const domValue = textareaRef.current.value;
@@ -156,53 +176,27 @@ function PureMultimodalInput({
     setSlashOpen(false);
     setInput("");
     switch (cmd.action) {
+      case "prompt":
+        if (cmd.prompt) {
+          window.history.pushState(
+            {},
+            "",
+            `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/chat/${chatId}`
+          );
+          sendMessage({
+            role: "user",
+            parts: [{ type: "text", text: cmd.prompt }],
+          });
+        }
+        break;
       case "new":
         router.push("/");
         break;
       case "clear":
         setMessages(() => []);
         break;
-      case "rename":
-        toast("Rename is available from the sidebar chat menu.");
-        break;
-      case "model": {
-        const modelBtn = document.querySelector<HTMLButtonElement>(
-          "[data-testid='model-selector']"
-        );
-        modelBtn?.click();
-        break;
-      }
       case "theme":
         setTheme(resolvedTheme === "dark" ? "light" : "dark");
-        break;
-      case "delete":
-        toast("Delete this chat?", {
-          action: {
-            label: "Delete",
-            onClick: () => {
-              fetch(
-                `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/chat?id=${chatId}`,
-                { method: "DELETE" }
-              );
-              router.push("/");
-              toast.success("Chat deleted");
-            },
-          },
-        });
-        break;
-      case "purge":
-        toast("Delete all chats?", {
-          action: {
-            label: "Delete all",
-            onClick: () => {
-              fetch(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/history`, {
-                method: "DELETE",
-              });
-              router.push("/");
-              toast.success("All chats deleted");
-            },
-          },
-        });
         break;
       default:
         break;
