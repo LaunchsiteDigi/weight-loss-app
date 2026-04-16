@@ -1,58 +1,80 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { suggestions } from "@/lib/constants";
-import { SparklesIcon } from "./icons";
+import {
+  ScaleIcon,
+  UtensilsIcon,
+  TrendingDownIcon,
+  DumbbellIcon,
+  MessageSquareIcon,
+  TargetIcon,
+} from "lucide-react";
+
+const features = [
+  {
+    icon: ScaleIcon,
+    title: "Track Weight",
+    description: "Log daily weigh-ins and see your trend",
+  },
+  {
+    icon: UtensilsIcon,
+    title: "Log Meals",
+    description: "Track calories and get meal suggestions",
+  },
+  {
+    icon: DumbbellIcon,
+    title: "Log Workouts",
+    description: "Record exercise with duration and calories",
+  },
+  {
+    icon: TrendingDownIcon,
+    title: "View Progress",
+    description: "Charts, stats, and goal tracking",
+  },
+  {
+    icon: TargetIcon,
+    title: "Set Goals",
+    description: "Target weight with timeline tracking",
+  },
+  {
+    icon: MessageSquareIcon,
+    title: "iMessage Coach",
+    description: "Daily check-ins via text message",
+  },
+];
 
 export function Preview() {
-  const router = useRouter();
-
-  const handleAction = (query?: string) => {
-    const url = query ? `/?query=${encodeURIComponent(query)}` : "/";
-    router.push(url);
-  };
-
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-tl-2xl bg-background">
-      <div className="flex h-14 shrink-0 items-center gap-3 border-b border-border/20 px-5">
-        <div className="flex size-5 items-center justify-center rounded bg-muted/60 ring-1 ring-border/50">
-          <SparklesIcon size={10} />
-        </div>
-        <span className="text-[13px] text-muted-foreground">Chatbot</span>
+    <div className="flex h-full flex-col items-center justify-center gap-10 px-8">
+      <div className="text-center">
+        <h2 className="text-3xl font-bold tracking-tight text-foreground">
+          Your AI Weight Loss Coach
+        </h2>
+        <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
+          Track weight, meals, workouts, and water intake. Get personalized
+          coaching and daily check-ins via iMessage.
+        </p>
       </div>
 
-      <div className="flex flex-1 flex-col items-center justify-center gap-8 px-8">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold tracking-tight">
-            What can I help with?
-          </h2>
-          <p className="mt-1.5 text-sm text-muted-foreground">
-            Ask a question, write code, or explore ideas.
-          </p>
-        </div>
-
-        <div className="grid w-full max-w-md grid-cols-2 gap-2">
-          {suggestions.map((suggestion) => (
-            <button
-              className="rounded-xl border border-border/30 bg-card/20 px-3 py-2.5 text-left text-[11px] leading-relaxed text-muted-foreground/70 transition-all duration-200 hover:border-border/60 hover:bg-card/40 hover:text-muted-foreground"
-              key={suggestion}
-              onClick={() => handleAction(suggestion)}
-              type="button"
-            >
-              {suggestion}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="shrink-0 px-5 pb-5">
-        <button
-          className="flex w-full items-center rounded-2xl border border-border/30 bg-card/30 px-4 py-3 text-left text-[13px] text-muted-foreground/40 transition-colors hover:border-border/50 hover:text-muted-foreground/60"
-          onClick={() => handleAction()}
-          type="button"
-        >
-          Ask anything...
-        </button>
+      <div className="grid w-full max-w-lg grid-cols-2 gap-3">
+        {features.map((feature) => (
+          <div
+            key={feature.title}
+            className="flex items-start gap-3 rounded-xl border border-border/20 bg-card/10 p-4"
+          >
+            <div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500">
+              <feature.icon className="size-3.5" />
+            </div>
+            <div>
+              <p className="text-[13px] font-medium text-foreground/80">
+                {feature.title}
+              </p>
+              <p className="mt-0.5 text-[11px] leading-relaxed text-muted-foreground/60">
+                {feature.description}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
