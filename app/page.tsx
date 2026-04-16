@@ -106,14 +106,69 @@ function AnimatedBubbles() {
   );
 }
 
+const IconChat = () => (
+  <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={C.sage} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+);
+const IconSyringe = () => (
+  <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={C.sage} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18 2 4 4" /><path d="m17 7 3-3" /><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5" /><path d="m9 11 4 4" /><path d="m5 19-3 3" /><path d="m14 4 6 6" /></svg>
+);
+const IconDumbbell = () => (
+  <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={C.sage} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6.5 6.5 11 11" /><path d="m21 21-1-1" /><path d="m3 3 1 1" /><path d="m18 22 4-4" /><path d="m2 6 4-4" /><path d="m3 10 7-7" /><path d="m14 21 7-7" /></svg>
+);
+const IconClock = () => (
+  <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={C.sage} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+);
+const IconHelp = () => (
+  <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={C.sage} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+);
+const IconChartBar = () => (
+  <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={C.sage} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg>
+);
+
 const features = [
-  { icon: "💬", label: "Track via text" },
-  { icon: "💉", label: "GLP-1 tracking" },
-  { icon: "🏋️", label: "Fitness plans" },
-  { icon: "⏰", label: "Smart reminders" },
-  { icon: "❓", label: "Ask anything" },
-  { icon: "📊", label: "Web dashboard" },
+  { icon: <IconChat />, label: "Track via text" },
+  { icon: <IconSyringe />, label: "GLP-1 tracking" },
+  { icon: <IconDumbbell />, label: "Fitness plans" },
+  { icon: <IconClock />, label: "Smart reminders" },
+  { icon: <IconHelp />, label: "Ask anything" },
+  { icon: <IconChartBar />, label: "Web dashboard" },
 ];
+
+function useAnimatedCount(target: number, duration = 3000) {
+  const [count, setCount] = useState(0);
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setStarted(true), 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!started) return;
+    const start = Date.now();
+    const from = Math.max(0, target - 200);
+    const tick = () => {
+      const elapsed = Date.now() - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(from + (target - from) * eased));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [started, target, duration]);
+
+  // Slow drip after reaching target
+  const reachedTarget = count >= target;
+  useEffect(() => {
+    if (!reachedTarget) return;
+    const interval = setInterval(() => {
+      setCount((c) => c + 1);
+    }, 8000 + Math.random() * 12000);
+    return () => clearInterval(interval);
+  }, [reachedTarget]);
+
+  return count;
+}
 
 function formatPhone(v: string): string {
   const d = v.replace(/\D/g, "").slice(0, 10);
@@ -127,6 +182,11 @@ function toE164(formatted: string): string {
   const digits = formatted.replace(/\D/g, "");
   if (digits.length === 10) return `+1${digits}`;
   return `+${digits}`;
+}
+
+function AnimatedWaitlistCount() {
+  const count = useAnimatedCount(2847);
+  return <>{count.toLocaleString()}</>;
 }
 
 export default function LandingPage() {
@@ -308,14 +368,14 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-          <span className="text-sm" style={{ color: C.textMuted }}><strong style={{ fontWeight: 700, color: C.text }}>2,847</strong> already on the waitlist</span>
+          <span className="text-sm" style={{ color: C.textMuted }}><strong style={{ fontWeight: 700, color: C.text }}><AnimatedWaitlistCount /></strong> already on the waitlist</span>
         </div>
 
         {/* Features */}
         <div className="grid w-full max-w-[520px] grid-cols-3 gap-3" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.95s both" : "none" }}>
           {features.map((f, i) => (
             <div key={i} className="flex flex-col items-center gap-2.5 rounded-2xl px-3 py-5" style={{ background: C.white, border: `1.5px solid ${C.border}`, boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}>
-              <div className="flex size-[42px] items-center justify-center rounded-xl text-lg" style={{ background: C.sageFaint, border: `1px solid ${C.sagePale}` }}>
+              <div className="flex size-[42px] items-center justify-center rounded-xl" style={{ background: C.sageFaint, border: `1px solid ${C.sagePale}` }}>
                 {f.icon}
               </div>
               <span className="text-center text-[13px] font-semibold leading-tight" style={{ color: C.textMuted }}>{f.label}</span>
