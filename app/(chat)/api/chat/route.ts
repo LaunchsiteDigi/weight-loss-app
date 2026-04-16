@@ -24,6 +24,13 @@ import { setGoal } from "@/lib/ai/tools/set-goal";
 import { dailyCheckin } from "@/lib/ai/tools/daily-checkin";
 import { getProgress } from "@/lib/ai/tools/get-progress";
 import { sendMotivation } from "@/lib/ai/tools/send-motivation";
+import { logCalories } from "@/lib/ai/tools/log-calories";
+import { logWater } from "@/lib/ai/tools/log-water";
+import { logWorkout } from "@/lib/ai/tools/log-workout";
+import { calculateBMI } from "@/lib/ai/tools/calculate-bmi";
+import { mealSuggestion } from "@/lib/ai/tools/meal-suggestion";
+import { logSleep } from "@/lib/ai/tools/log-sleep";
+import { logMeasurements } from "@/lib/ai/tools/log-measurements";
 import { isProductionEnvironment } from "@/lib/constants";
 import {
   createStreamId,
@@ -185,6 +192,13 @@ export async function POST(request: Request) {
       "dailyCheckin",
       "getProgress",
       "sendMotivation",
+      "logCalories",
+      "logWater",
+      "logWorkout",
+      "calculateBMI",
+      "mealSuggestion",
+      "logSleep",
+      "logMeasurements",
     ] as const;
 
     const modelMessages = await convertToModelMessages(uiMessages);
@@ -204,6 +218,13 @@ export async function POST(request: Request) {
             dailyCheckin: dailyCheckin({ session }),
             getProgress: getProgress({ session }),
             sendMotivation: sendMotivation({ session }),
+            logCalories: logCalories({ session }),
+            logWater: logWater({ session }),
+            logWorkout: logWorkout({ session }),
+            calculateBMI,
+            mealSuggestion,
+            logSleep: logSleep({ session }),
+            logMeasurements: logMeasurements({ session }),
           },
           experimental_telemetry: {
             isEnabled: isProductionEnvironment,
