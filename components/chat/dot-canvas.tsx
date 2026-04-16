@@ -61,10 +61,10 @@ export function DotCanvas() {
 
     const isDark =
       document.documentElement.classList.contains("dark");
-    const dotColor = isDark ? "140, 92, 255" : "112, 51, 255";
+    const dotColor = isDark ? "157, 191, 152" : "139, 168, 136";
     const pulseColor = isDark
-      ? "rgba(140, 92, 255,"
-      : "rgba(112, 51, 255,";
+      ? "rgba(157, 191, 152,"
+      : "rgba(139, 168, 136,";
 
     function draw() {
       if (!ctx) return;

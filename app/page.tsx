@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import confetti from "canvas-confetti";
 import { type RegisterActionState, register } from "./(auth)/actions";
 import { useActionState } from "react";
 import { toast } from "@/components/chat/toast";
@@ -203,10 +204,44 @@ export default function LandingPage() {
 
   useEffect(() => { const t = setTimeout(() => setIsVisible(true), 100); return () => clearTimeout(t); }, []);
 
+  const fireConfetti = useCallback(() => {
+    const duration = 2500;
+    const end = Date.now() + duration;
+    const colors = [C.sage, C.sageMid, C.sagePale, "#ffffff", C.sageDark];
+
+    const frame = () => {
+      confetti({
+        particleCount: 3,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.7 },
+        colors,
+      });
+      confetti({
+        particleCount: 3,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.7 },
+        colors,
+      });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    };
+
+    // Initial burst
+    confetti({
+      particleCount: 80,
+      spread: 100,
+      origin: { y: 0.6 },
+      colors,
+    });
+    frame();
+  }, []);
+
   useEffect(() => {
     if (state.status === "success") {
       setSubmitted(true);
-      setTimeout(() => router.push("/demo"), 2000);
+      fireConfetti();
+      setTimeout(() => router.push("/demo"), 3000);
     } else if (state.status === "failed") {
       toast({ type: "error", description: "Something went wrong. Try again!" });
     } else if (state.status === "user_exists") {

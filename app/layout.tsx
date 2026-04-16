@@ -15,8 +15,8 @@ export const viewport = {
   maximumScale: 1,
 };
 
-const LIGHT_THEME_COLOR = "#fdfdfd";
-const DARK_THEME_COLOR = "#1a1b1e";
+const LIGHT_THEME_COLOR = "#FAFAF7";
+const DARK_THEME_COLOR = "#161816";
 const THEME_COLOR_SCRIPT = `\
 (function() {
   var html = document.documentElement;

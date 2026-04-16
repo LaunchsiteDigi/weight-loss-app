@@ -86,11 +86,16 @@ export async function POST(request: Request) {
       return new ChatbotError("unauthorized:chat").toResponse();
     }
 
+    if (!process.env.OPENROUTER_API_KEY) {
+      console.error("OPENROUTER_API_KEY is not set");
+      return new ChatbotError("offline:chat").toResponse();
+    }
+
     const chatModel = allowedModelIds.has(selectedChatModel)
       ? selectedChatModel
       : DEFAULT_CHAT_MODEL;
 
-    await checkIpRateLimit(ipAddress(request));
+    await checkIpRateLimit(ipAddress(request)).catch(() => null);
 
     const userType: UserType = session.user.type;
 
