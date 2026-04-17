@@ -280,9 +280,9 @@ export default function LandingPage() {
 
       <div className="relative flex w-full max-w-[680px] flex-col items-center text-center" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? "translateY(0)" : "translateY(30px)", transition: "all 1s cubic-bezier(0.16, 1, 0.3, 1)" }}>
         {/* Logo */}
-        <div className="mb-6 flex items-baseline select-none" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.1s both" : "none" }}>
-          <span style={{ fontFamily: "'Sora', sans-serif", fontSize: "clamp(20px, 3vw, 24px)", fontWeight: 700, color: C.text, letterSpacing: "-0.03em" }}>SlimZer</span>
-          <span style={{ fontFamily: "'Sora', sans-serif", fontSize: "clamp(20px, 3vw, 24px)", fontWeight: 800, color: C.sage, letterSpacing: "-0.03em" }}>0</span>
+        <div className="mb-8 flex items-baseline select-none" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.1s both" : "none" }}>
+          <span style={{ fontFamily: "'Sora', sans-serif", fontSize: "clamp(36px, 5vw, 48px)", fontWeight: 700, color: C.text, letterSpacing: "-0.04em" }}>SlimZer</span>
+          <span style={{ fontFamily: "'Sora', sans-serif", fontSize: "clamp(36px, 5vw, 48px)", fontWeight: 800, color: C.sage, letterSpacing: "-0.04em" }}>0</span>
         </div>
 
         {/* Badge */}
