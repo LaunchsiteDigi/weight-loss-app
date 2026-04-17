@@ -839,15 +839,65 @@ export async function getRecentCheckins(userId: string, days = 7) {
 
 export async function getUserByPhone(phone: string) {
   try {
-    const [result] = await db
+    // Try User table first (set during registration)
+    const [fromUser] = await db
+      .select({ userId: user.id, phone: user.phone })
+      .from(user)
+      .where(eq(user.phone, phone));
+    if (fromUser) return fromUser;
+
+    // Fallback to UserProfile table
+    const [fromProfile] = await db
       .select({ userId: userProfile.userId, phone: userProfile.phone })
       .from(userProfile)
       .where(eq(userProfile.phone, phone));
-    return result ?? null;
+    return fromProfile ?? null;
   } catch (_error) {
     throw new ChatbotError(
       "bad_request:database",
       "Failed to get user by phone"
+    );
+  }
+}
+
+export async function getConversationsByPhone(phone: string) {
+  try {
+    const userRecord = await getUserByPhone(phone);
+    if (!userRecord) return [];
+
+    const userChats = await db
+      .select({ id: chat.id, title: chat.title, createdAt: chat.createdAt })
+      .from(chat)
+      .where(eq(chat.userId, userRecord.userId))
+      .orderBy(desc(chat.createdAt))
+      .limit(20);
+
+    const results = [];
+    for (const c of userChats) {
+      const messages = await db
+        .select()
+        .from(message)
+        .where(eq(message.chatId, c.id))
+        .orderBy(asc(message.createdAt));
+
+      results.push({
+        chatId: c.id,
+        title: c.title,
+        createdAt: c.createdAt,
+        messages: messages.map((m) => ({
+          id: m.id,
+          role: m.role,
+          parts: m.parts,
+          createdAt: m.createdAt,
+        })),
+      });
+    }
+
+    return results;
+  } catch (_error) {
+    throw new ChatbotError(
+      "bad_request:database",
+      "Failed to get conversations by phone"
     );
   }
 }

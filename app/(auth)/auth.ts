@@ -5,6 +5,7 @@ import {
   createGuestUser,
   getUserByPhoneNumber,
   createUserWithPhone,
+  upsertUserProfile,
 } from "@/lib/db/queries";
 import { createGHLContact } from "@/lib/ghl";
 import { authConfig } from "./auth.config";
@@ -69,7 +70,8 @@ export const {
 
           const newUser = await createUserWithPhone({ phone, name, email });
 
-          // Send to GHL in background (don't block auth)
+          // Sync phone to UserProfile + send to GHL in background
+          upsertUserProfile(newUser.id, { phone }).catch(() => null);
           createGHLContact({ phone, name, email }).catch(() => null);
 
           return { ...newUser, type: "regular" };

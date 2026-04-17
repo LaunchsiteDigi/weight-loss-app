@@ -17,6 +17,14 @@ export async function POST(request: Request) {
   try {
     const payload = await request.json();
 
+    console.log("Sendblue webhook received:", {
+      from: payload.from_number,
+      to: payload.to_number,
+      is_outbound: payload.is_outbound,
+      content: payload.content?.slice(0, 50),
+      status: payload.status,
+    });
+
     // Only process inbound messages
     if (payload.is_outbound) {
       return NextResponse.json({ success: true });
@@ -29,13 +37,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true });
     }
 
-    // Look up user by phone number
+    // Look up user by phone number (checks both User and UserProfile tables)
     const userRecord = await getUserByPhone(senderPhone);
 
     if (!userRecord) {
+      console.log("Sendblue: Unknown phone, sending signup prompt:", senderPhone);
       await sendIMessage(
         senderPhone,
-        "Hey! I don't recognize your number yet. Please sign up at our app and add your phone number in Settings to get started with your weight loss coach!"
+        "Hey! I don't recognize your number yet. Sign up at slimzer0.com to get started with your AI weight loss coach!"
       );
       return NextResponse.json({ success: true });
     }
@@ -78,7 +87,7 @@ export async function POST(request: Request) {
       ],
     });
 
-    // Load recent context
+    // Load recent context (last 10 messages for context window)
     const recentMessages = await getMessagesByChatId({ id: chatId });
     const contextMessages = recentMessages.slice(-10).map((m) => ({
       role: m.role as "user" | "assistant",
@@ -115,6 +124,8 @@ export async function POST(request: Request) {
 
     // Send reply via iMessage
     await sendIMessage(senderPhone, text);
+
+    console.log("Sendblue: Replied to", senderPhone, "via chatId:", chatId);
 
     return NextResponse.json({ success: true });
   } catch (error) {
