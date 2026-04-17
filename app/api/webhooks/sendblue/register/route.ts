@@ -29,7 +29,7 @@ export async function POST(request: Request) {
         "sb-api-secret-key": apiSecret,
       },
       body: JSON.stringify({
-        url: webhookUrl,
+        webhooks: [webhookUrl],
       }),
     });
 
