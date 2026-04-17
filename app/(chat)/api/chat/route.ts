@@ -18,7 +18,7 @@ import {
   DEFAULT_CHAT_MODEL,
 } from "@/lib/ai/models";
 import { type RequestHints, systemPrompt } from "@/lib/ai/prompts";
-import { getLanguageModel } from "@/lib/ai/providers";
+import { getLanguageModel, getFallbackModelId } from "@/lib/ai/providers";
 import { logWeight } from "@/lib/ai/tools/log-weight";
 import { setGoal } from "@/lib/ai/tools/set-goal";
 import { dailyCheckin } from "@/lib/ai/tools/daily-checkin";
@@ -284,18 +284,17 @@ export async function POST(request: Request) {
         }
       },
       onError: (error) => {
-        console.error("Chat stream error:", {
-          message: error instanceof Error ? error.message : String(error),
-          stack: error instanceof Error ? error.stack : undefined,
-          model: chatModel,
-        });
-        if (
-          error instanceof Error &&
-          error.message?.includes("rate limit")
-        ) {
-          return "Rate limited by the AI provider. Please try again in a moment.";
+        const msg = error instanceof Error ? error.message : String(error);
+        console.error("Chat stream error:", { message: msg, model: chatModel });
+
+        if (msg.includes("429") || msg.includes("rate-limited") || msg.includes("rate limit")) {
+          const fallback = getFallbackModelId(chatModel);
+          return `Model is temporarily busy. ${fallback ? "Please try again - a different model will be used." : "Please try again in a moment."}`;
         }
-        return "Oops, an error occurred! Please try again.";
+        if (msg.includes("401") || msg.includes("Unauthorized")) {
+          return "AI service authentication error. Please contact support.";
+        }
+        return "Something went wrong. Please try again.";
       },
     });
 

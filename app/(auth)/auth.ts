@@ -6,6 +6,7 @@ import {
   getUserByPhoneNumber,
   createUserWithPhone,
 } from "@/lib/db/queries";
+import { createGHLContact } from "@/lib/ghl";
 import { authConfig } from "./auth.config";
 
 export type UserType = "guest" | "regular";
@@ -67,6 +68,10 @@ export const {
           }
 
           const newUser = await createUserWithPhone({ phone, name, email });
+
+          // Send to GHL in background (don't block auth)
+          createGHLContact({ phone, name, email }).catch(() => null);
+
           return { ...newUser, type: "regular" };
         }
 

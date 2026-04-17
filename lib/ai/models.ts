@@ -1,9 +1,9 @@
-export const DEFAULT_CHAT_MODEL = "google/gemma-3-27b-it:free";
+export const DEFAULT_CHAT_MODEL = "openai/gpt-oss-120b:free";
 
 export const titleModel = {
-  id: "google/gemma-3-27b-it:free",
-  name: "Gemma 3 27B",
-  provider: "google",
+  id: "openai/gpt-oss-20b:free",
+  name: "GPT OSS 20B",
+  provider: "openai",
   description: "Title generation",
 };
 
@@ -22,22 +22,28 @@ export type ChatModel = {
 
 export const chatModels: ChatModel[] = [
   {
+    id: "openai/gpt-oss-120b:free",
+    name: "GPT OSS 120B",
+    provider: "openai",
+    description: "Primary model with reasoning",
+  },
+  {
+    id: "nvidia/nemotron-3-super-120b-a12b:free",
+    name: "Nemotron Super 120B",
+    provider: "nvidia",
+    description: "Fast fallback model",
+  },
+  {
     id: "google/gemma-3-27b-it:free",
     name: "Gemma 3 27B",
     provider: "google",
-    description: "Fast and capable with tool support",
+    description: "Lightweight alternative",
   },
   {
     id: "meta-llama/llama-3.3-70b-instruct:free",
     name: "Llama 3.3 70B",
     provider: "meta",
-    description: "Large model for complex coaching",
-  },
-  {
-    id: "mistralai/mistral-small-3.1-24b-instruct:free",
-    name: "Mistral Small 3.1",
-    provider: "mistral",
-    description: "Lightweight and fast",
+    description: "Large model for complex tasks",
   },
 ];
 

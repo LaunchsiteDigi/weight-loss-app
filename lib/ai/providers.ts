@@ -1,7 +1,7 @@
 import { customProvider } from "ai";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { isTestEnvironment } from "../constants";
-import { titleModel } from "./models";
+import { titleModel, chatModels } from "./models";
 
 const openrouter = createOpenRouter({
   apiKey: process.env.OPENROUTER_API_KEY,
@@ -25,6 +25,14 @@ export function getLanguageModel(modelId: string) {
   }
 
   return openrouter(modelId);
+}
+
+export function getFallbackModelId(currentModelId: string): string | null {
+  const idx = chatModels.findIndex((m) => m.id === currentModelId);
+  if (idx >= 0 && idx < chatModels.length - 1) {
+    return chatModels[idx + 1].id;
+  }
+  return null;
 }
 
 export function getTitleModel() {
