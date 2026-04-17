@@ -5,6 +5,9 @@ import { DEFAULT_CHAT_MODEL } from "@/lib/ai/models";
 import { sendIMessage } from "@/lib/sendblue";
 import {
   getUserByPhone,
+  getUserByPhoneNumber,
+  createUserWithPhone,
+  upsertUserProfile,
   getChatsByUserId,
   saveChat,
   saveMessages,
@@ -16,6 +19,7 @@ import {
   getActiveGoal,
   getRecentCheckins,
 } from "@/lib/db/queries";
+import { createGHLContact } from "@/lib/ghl";
 import { generateUUID } from "@/lib/utils";
 
 const IMESSAGE_SYSTEM_PROMPT = `You are Coach, a supportive weight loss coach communicating via text message.
@@ -53,12 +57,32 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true });
     }
 
-    const userRecord = await getUserByPhone(senderPhone);
+    let userRecord = await getUserByPhone(senderPhone);
 
+    // Auto-register new users who text in
     if (!userRecord) {
+      console.log("Sendblue: New user, auto-registering:", senderPhone);
+
+      const newUser = await createUserWithPhone({
+        phone: senderPhone,
+        name: senderPhone,
+        email: `${senderPhone.replace(/\D/g, "")}@sms.slimzer0.com`,
+      });
+
+      // Sync to UserProfile + GHL in background
+      upsertUserProfile(newUser.id, { phone: senderPhone }).catch(() => null);
+      createGHLContact({
+        phone: senderPhone,
+        name: "SMS User",
+        email: `${senderPhone.replace(/\D/g, "")}@sms.slimzer0.com`,
+      }).catch(() => null);
+
+      userRecord = { userId: newUser.id, phone: senderPhone };
+
+      // Send welcome message
       await sendIMessage(
         senderPhone,
-        "Hey! Sign up at slimzer0.com to get started with your AI weight loss coach. It's free!"
+        "Hey! Welcome to SlimZer0 - your AI weight loss coach. Text me anytime to log meals, track workouts, or check progress. Let's start - what's your current weight?"
       );
       return NextResponse.json({ success: true });
     }
