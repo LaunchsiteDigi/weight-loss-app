@@ -8,6 +8,7 @@ import {
   upsertUserProfile,
 } from "@/lib/db/queries";
 import { createGHLContact } from "@/lib/ghl";
+import { sendIMessage } from "@/lib/sendblue";
 import { authConfig } from "./auth.config";
 
 export type UserType = "guest" | "regular";
@@ -70,9 +71,13 @@ export const {
 
           const newUser = await createUserWithPhone({ phone, name, email });
 
-          // Sync phone to UserProfile + send to GHL in background
+          // Sync phone to UserProfile + send to GHL + welcome iMessage (all background)
           upsertUserProfile(newUser.id, { phone }).catch(() => null);
           createGHLContact({ phone, name, email }).catch(() => null);
+          sendIMessage(
+            phone,
+            `Hey ${name.split(" ")[0]}! Welcome to SlimZer0. I'm your AI weight loss coach. Text me anytime to log meals, track workouts, or check progress. Let's start - what's your current weight?`
+          ).catch(() => null);
 
           return { ...newUser, type: "regular" };
         }
