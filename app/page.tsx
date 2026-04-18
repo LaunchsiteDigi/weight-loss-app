@@ -252,12 +252,11 @@ export default function LandingPage() {
 
         {/* Heading */}
         <h1 style={{ fontFamily: "'Sora', sans-serif", fontSize: "clamp(42px, 8vw, 80px)", lineHeight: 1.0, color: C.text, letterSpacing: "-0.045em", fontWeight: 800, marginBottom: 24, animation: isVisible ? "fadeUp 0.7s ease-out 0.3s both" : "none" }}>
-          This is weight loss<br />made <span style={{ color: C.sage }}>simple</span>
+          Lose weight by<br />sending a <span style={{ color: C.sage }}>text</span>.
         </h1>
 
-        {/* How it works */}
-        <p className="mx-auto mb-10 max-w-[500px]" style={{ fontSize: "clamp(15px, 2.2vw, 18px)", lineHeight: 1.7, color: C.textMuted, fontWeight: 400, animation: isVisible ? "fadeUp 0.7s ease-out 0.45s both" : "none" }}>
-          Text your meals, workouts, and GLP-1 doses to your coach. Get instant feedback, smart reminders, and a web dashboard to track it all. No app to download.
+        <p className="mx-auto mb-10 max-w-[520px]" style={{ fontSize: "clamp(15px, 2.2vw, 18px)", lineHeight: 1.7, color: C.textMuted, fontWeight: 400, animation: isVisible ? "fadeUp 0.7s ease-out 0.45s both" : "none" }}>
+          No app. No complicated diet plans. Just text SlimZer0 what you ate, your GLP-1 dose, or your workout — and get instant coaching back. Your progress dashboard builds itself.
         </p>
 
         {/* Social proof - avatars only */}
