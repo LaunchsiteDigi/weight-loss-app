@@ -127,49 +127,13 @@ const IconChartBar = () => (
 );
 
 const features = [
-  { icon: <IconChat />, label: "Track via text" },
-  { icon: <IconSyringe />, label: "GLP-1 tracking" },
-  { icon: <IconDumbbell />, label: "Fitness plans" },
-  { icon: <IconClock />, label: "Smart reminders" },
-  { icon: <IconHelp />, label: "Ask anything" },
-  { icon: <IconChartBar />, label: "Web dashboard" },
+  { icon: <IconChat />, label: "Log meals by text", sub: "Just text what you ate" },
+  { icon: <IconSyringe />, label: "Never miss a dose", sub: "GLP-1 reminders built in" },
+  { icon: <IconDumbbell />, label: "Workouts that stick", sub: "Plans that fit your life" },
+  { icon: <IconClock />, label: "Stay accountable", sub: "Daily check-ins via SMS" },
+  { icon: <IconHelp />, label: "Get instant answers", sub: "Nutrition & fitness Q&A" },
+  { icon: <IconChartBar />, label: "See real progress", sub: "Charts & trends on the web" },
 ];
-
-function useAnimatedCount(target: number, duration = 3000) {
-  const [count, setCount] = useState(0);
-  const [started, setStarted] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setStarted(true), 1200);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (!started) return;
-    const start = Date.now();
-    const from = Math.max(0, target - 200);
-    const tick = () => {
-      const elapsed = Date.now() - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(from + (target - from) * eased));
-      if (progress < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }, [started, target, duration]);
-
-  // Slow drip after reaching target
-  const reachedTarget = count >= target;
-  useEffect(() => {
-    if (!reachedTarget) return;
-    const interval = setInterval(() => {
-      setCount((c) => c + 1);
-    }, 8000 + Math.random() * 12000);
-    return () => clearInterval(interval);
-  }, [reachedTarget]);
-
-  return count;
-}
 
 function formatPhone(v: string): string {
   const d = v.replace(/\D/g, "").slice(0, 10);
@@ -183,11 +147,6 @@ function toE164(formatted: string): string {
   const digits = formatted.replace(/\D/g, "");
   if (digits.length === 10) return `+1${digits}`;
   return `+${digits}`;
-}
-
-function AnimatedWaitlistCount() {
-  const count = useAnimatedCount(2847);
-  return <>{count.toLocaleString()}</>;
 }
 
 export default function LandingPage() {
@@ -296,13 +255,13 @@ export default function LandingPage() {
           This is weight loss<br />made <span style={{ color: C.sage }}>simple</span>
         </h1>
 
-        {/* Subtext */}
-        <p className="mx-auto mb-9 max-w-[500px]" style={{ fontSize: "clamp(15px, 2.2vw, 18px)", lineHeight: 1.7, color: C.textMuted, fontWeight: 400, animation: isVisible ? "fadeUp 0.7s ease-out 0.45s both" : "none" }}>
-          Track meals, log GLP-1 doses, plan workouts, and get answers — all through text message. SlimZer0 is your AI weight loss companion with a web dashboard to visualize progress.
+        {/* How it works */}
+        <p className="mx-auto mb-10 max-w-[500px]" style={{ fontSize: "clamp(15px, 2.2vw, 18px)", lineHeight: 1.7, color: C.textMuted, fontWeight: 400, animation: isVisible ? "fadeUp 0.7s ease-out 0.45s both" : "none" }}>
+          Text your meals, workouts, and GLP-1 doses to your coach. Get instant feedback, smart reminders, and a web dashboard to track it all. No app to download.
         </p>
 
-        {/* Social proof */}
-        <div className="mb-8 flex items-center gap-3.5" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.7s both" : "none" }}>
+        {/* Social proof - avatars only */}
+        <div className="mb-10 flex items-center gap-3.5" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.55s both" : "none" }}>
           <div className="flex items-center">
             {AVATARS.map((src, i) => (
               <div key={i} className="relative size-[34px] overflow-hidden rounded-full" style={{ border: `2.5px solid ${C.bg}`, marginLeft: i === 0 ? 0 : -10, zIndex: AVATARS.length - i, background: C.sagePale }}>
@@ -311,17 +270,31 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-          <span className="text-sm" style={{ color: C.textMuted }}><strong style={{ fontWeight: 700, color: C.text }}><AnimatedWaitlistCount /></strong> already on the waitlist</span>
+          <span className="text-sm" style={{ color: C.textMuted }}>Trusted by early members</span>
         </div>
 
-        {/* Features */}
-        <div className="mb-10 grid w-full max-w-[520px] grid-cols-3 gap-3" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.85s both" : "none" }}>
+        {/* Inline CTA above features */}
+        <div className="mb-10 w-full max-w-[480px]" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.65s both" : "none" }}>
+          <button
+            onClick={() => document.getElementById("waitlist-input")?.focus()}
+            className="flex w-full items-center justify-center gap-2.5 rounded-2xl border-none text-[16px] font-semibold text-white transition-all hover:opacity-90"
+            style={{ height: 52, background: C.sage, fontFamily: "'Outfit', sans-serif", letterSpacing: "-0.01em" }}
+            type="button"
+          >
+            <span>Get early access</span>
+            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><polyline points="19 12 12 19 5 12" /></svg>
+          </button>
+        </div>
+
+        {/* Benefits */}
+        <div className="mb-10 grid w-full max-w-[520px] grid-cols-3 gap-3" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.8s both" : "none" }}>
           {features.map((f, i) => (
-            <div key={i} className="flex flex-col items-center gap-2.5 rounded-2xl px-3 py-5" style={{ background: C.white, border: `1.5px solid ${C.border}`, boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}>
+            <div key={i} className="flex flex-col items-center gap-2 rounded-2xl px-3 py-5" style={{ background: C.white, border: `1.5px solid ${C.border}`, boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}>
               <div className="flex size-[42px] items-center justify-center rounded-xl" style={{ background: C.sageFaint, border: `1px solid ${C.sagePale}` }}>
                 {f.icon}
               </div>
-              <span className="text-center text-[13px] font-semibold leading-tight" style={{ color: C.textMuted }}>{f.label}</span>
+              <span className="text-center text-[13px] font-bold leading-tight" style={{ color: C.text }}>{f.label}</span>
+              <span className="text-center text-[11px] leading-snug" style={{ color: C.textFaint }}>{f.sub}</span>
             </div>
           ))}
         </div>
@@ -343,6 +316,7 @@ export default function LandingPage() {
                     </div>
                     <div className="mx-1.5 h-[22px] w-px shrink-0" style={{ background: C.border }} />
                     <input
+                      id="waitlist-input"
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(formatPhone(e.target.value))}
@@ -413,8 +387,16 @@ export default function LandingPage() {
             </div>
           )}
           <p className="text-xs" style={{ color: C.textFaint, letterSpacing: "0.01em" }}>
-            {step === "phone" ? "One text when access opens. No spam, unsubscribe anytime." : "Already have an account? "}
-            {step === "details" && <a href="/login" className="font-semibold" style={{ color: C.sage }}>Sign in</a>}
+            {step === "phone" ? (
+              <>
+                <strong style={{ color: C.sageDark }}>Limited beta spots.</strong> No spam, unsubscribe anytime.
+              </>
+            ) : (
+              <>
+                Already have an account?{" "}
+                <a href="/login" className="font-semibold" style={{ color: C.sage }}>Sign in</a>
+              </>
+            )}
           </p>
         </div>
       </div>
