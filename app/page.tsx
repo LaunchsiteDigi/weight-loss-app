@@ -301,13 +301,8 @@ export default function LandingPage() {
           Track meals, log GLP-1 doses, plan workouts, and get answers — all through text message. SlimZer0 is your AI weight loss companion with a web dashboard to visualize progress.
         </p>
 
-        {/* Animated bubbles */}
-        <div className="mb-10 w-full" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.55s both" : "none" }}>
-          <AnimatedBubbles />
-        </div>
-
         {/* CTA */}
-        <div className="mx-auto mb-9 flex w-full max-w-[480px] flex-col items-center gap-3.5" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.65s both" : "none" }}>
+        <div className="mx-auto mb-9 flex w-full max-w-[480px] flex-col items-center gap-3.5" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.55s both" : "none" }}>
           {!submitted ? (
             <>
               {step === "phone" ? (
@@ -394,7 +389,7 @@ export default function LandingPage() {
         </div>
 
         {/* Social proof */}
-        <div className="mb-8 flex items-center gap-3.5" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.8s both" : "none" }}>
+        <div className="mb-8 flex items-center gap-3.5" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.7s both" : "none" }}>
           <div className="flex items-center">
             {AVATARS.map((src, i) => (
               <div key={i} className="relative size-[34px] overflow-hidden rounded-full" style={{ border: `2.5px solid ${C.bg}`, marginLeft: i === 0 ? 0 : -10, zIndex: AVATARS.length - i, background: C.sagePale }}>
@@ -407,7 +402,7 @@ export default function LandingPage() {
         </div>
 
         {/* Features */}
-        <div className="grid w-full max-w-[520px] grid-cols-3 gap-3" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.95s both" : "none" }}>
+        <div className="mb-10 grid w-full max-w-[520px] grid-cols-3 gap-3" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.85s both" : "none" }}>
           {features.map((f, i) => (
             <div key={i} className="flex flex-col items-center gap-2.5 rounded-2xl px-3 py-5" style={{ background: C.white, border: `1.5px solid ${C.border}`, boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}>
               <div className="flex size-[42px] items-center justify-center rounded-xl" style={{ background: C.sageFaint, border: `1px solid ${C.sagePale}` }}>
@@ -416,6 +411,11 @@ export default function LandingPage() {
               <span className="text-center text-[13px] font-semibold leading-tight" style={{ color: C.textMuted }}>{f.label}</span>
             </div>
           ))}
+        </div>
+
+        {/* Animated bubbles */}
+        <div className="w-full" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 1.1s both" : "none" }}>
+          <AnimatedBubbles />
         </div>
       </div>
     </div>
