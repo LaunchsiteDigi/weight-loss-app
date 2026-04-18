@@ -301,8 +301,38 @@ export default function LandingPage() {
           Track meals, log GLP-1 doses, plan workouts, and get answers — all through text message. SlimZer0 is your AI weight loss companion with a web dashboard to visualize progress.
         </p>
 
-        {/* CTA */}
-        <div className="mx-auto mb-9 flex w-full max-w-[480px] flex-col items-center gap-3.5" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.55s both" : "none" }}>
+        {/* Social proof */}
+        <div className="mb-8 flex items-center gap-3.5" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.7s both" : "none" }}>
+          <div className="flex items-center">
+            {AVATARS.map((src, i) => (
+              <div key={i} className="relative size-[34px] overflow-hidden rounded-full" style={{ border: `2.5px solid ${C.bg}`, marginLeft: i === 0 ? 0 : -10, zIndex: AVATARS.length - i, background: C.sagePale }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={src} alt="" className="block size-full object-cover" />
+              </div>
+            ))}
+          </div>
+          <span className="text-sm" style={{ color: C.textMuted }}><strong style={{ fontWeight: 700, color: C.text }}><AnimatedWaitlistCount /></strong> already on the waitlist</span>
+        </div>
+
+        {/* Features */}
+        <div className="mb-10 grid w-full max-w-[520px] grid-cols-3 gap-3" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.85s both" : "none" }}>
+          {features.map((f, i) => (
+            <div key={i} className="flex flex-col items-center gap-2.5 rounded-2xl px-3 py-5" style={{ background: C.white, border: `1.5px solid ${C.border}`, boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}>
+              <div className="flex size-[42px] items-center justify-center rounded-xl" style={{ background: C.sageFaint, border: `1px solid ${C.sagePale}` }}>
+                {f.icon}
+              </div>
+              <span className="text-center text-[13px] font-semibold leading-tight" style={{ color: C.textMuted }}>{f.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Animated bubbles */}
+        <div className="mb-10 w-full" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 1.1s both" : "none" }}>
+          <AnimatedBubbles />
+        </div>
+
+        {/* CTA - Join Waitlist */}
+        <div className="mx-auto flex w-full max-w-[480px] flex-col items-center gap-3.5" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 1.25s both" : "none" }}>
           {!submitted ? (
             <>
               {step === "phone" ? (
@@ -330,7 +360,7 @@ export default function LandingPage() {
                     className="flex w-full items-center justify-center gap-2.5 rounded-2xl border-none text-[17px] font-semibold text-white transition-all"
                     style={{ height: 56, background: C.sage, opacity: isPhoneValid ? 1 : 0.5, cursor: isPhoneValid ? "pointer" : "not-allowed", fontFamily: "'Outfit', sans-serif", letterSpacing: "-0.01em" }}
                   >
-                    <span>Continue</span>
+                    <span>Join waiting list</span>
                     <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
                   </button>
                 </>
@@ -363,7 +393,7 @@ export default function LandingPage() {
                     className="flex w-full items-center justify-center gap-2.5 rounded-2xl border-none text-[17px] font-semibold text-white transition-all"
                     style={{ height: 56, background: C.sage, opacity: (name.trim() && email.trim()) ? 1 : 0.5, cursor: (name.trim() && email.trim()) ? "pointer" : "not-allowed", fontFamily: "'Outfit', sans-serif" }}
                   >
-                    <span>Sign up here</span>
+                    <span>Join waiting list</span>
                     <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
                   </button>
                 </>
@@ -386,36 +416,6 @@ export default function LandingPage() {
             {step === "phone" ? "One text when access opens. No spam, unsubscribe anytime." : "Already have an account? "}
             {step === "details" && <a href="/login" className="font-semibold" style={{ color: C.sage }}>Sign in</a>}
           </p>
-        </div>
-
-        {/* Social proof */}
-        <div className="mb-8 flex items-center gap-3.5" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.7s both" : "none" }}>
-          <div className="flex items-center">
-            {AVATARS.map((src, i) => (
-              <div key={i} className="relative size-[34px] overflow-hidden rounded-full" style={{ border: `2.5px solid ${C.bg}`, marginLeft: i === 0 ? 0 : -10, zIndex: AVATARS.length - i, background: C.sagePale }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt="" className="block size-full object-cover" />
-              </div>
-            ))}
-          </div>
-          <span className="text-sm" style={{ color: C.textMuted }}><strong style={{ fontWeight: 700, color: C.text }}><AnimatedWaitlistCount /></strong> already on the waitlist</span>
-        </div>
-
-        {/* Features */}
-        <div className="mb-10 grid w-full max-w-[520px] grid-cols-3 gap-3" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.85s both" : "none" }}>
-          {features.map((f, i) => (
-            <div key={i} className="flex flex-col items-center gap-2.5 rounded-2xl px-3 py-5" style={{ background: C.white, border: `1.5px solid ${C.border}`, boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}>
-              <div className="flex size-[42px] items-center justify-center rounded-xl" style={{ background: C.sageFaint, border: `1px solid ${C.sagePale}` }}>
-                {f.icon}
-              </div>
-              <span className="text-center text-[13px] font-semibold leading-tight" style={{ color: C.textMuted }}>{f.label}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Animated bubbles */}
-        <div className="w-full" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 1.1s both" : "none" }}>
-          <AnimatedBubbles />
         </div>
       </div>
     </div>
