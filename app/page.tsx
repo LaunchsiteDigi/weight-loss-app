@@ -277,7 +277,7 @@ export default function LandingPage() {
           <button
             onClick={() => document.getElementById("waitlist-input")?.focus()}
             className="flex w-full items-center justify-center gap-2.5 rounded-2xl border-none text-[16px] font-semibold text-white transition-all hover:opacity-90"
-            style={{ height: 52, background: C.sage, fontFamily: "'Outfit', sans-serif", letterSpacing: "-0.01em" }}
+            style={{ height: 42, background: C.sage, fontFamily: "'Outfit', sans-serif", letterSpacing: "-0.01em" }}
             type="button"
           >
             <span>Get early access</span>
@@ -323,15 +323,15 @@ export default function LandingPage() {
                       onBlur={() => setFocusInput(false)}
                       onKeyDown={(e) => e.key === "Enter" && handlePhoneNext()}
                       placeholder="(555) 000-0000"
-                      className="min-w-0 flex-1 border-none bg-transparent py-3 pl-2 text-[17px] font-medium tracking-wide outline-none"
+                      className="min-w-0 flex-1 border-none bg-transparent py-2 pl-2 text-[15px] font-medium tracking-wide outline-none"
                       style={{ color: C.text, fontFamily: "'Outfit', sans-serif" }}
                     />
                   </div>
                   <button
                     onClick={handlePhoneNext}
                     disabled={!isPhoneValid}
-                    className="flex w-full items-center justify-center gap-2.5 rounded-2xl border-none text-[17px] font-semibold text-white transition-all"
-                    style={{ height: 56, background: C.sage, opacity: isPhoneValid ? 1 : 0.5, cursor: isPhoneValid ? "pointer" : "not-allowed", fontFamily: "'Outfit', sans-serif", letterSpacing: "-0.01em" }}
+                    className="flex w-full items-center justify-center gap-2.5 rounded-2xl border-none text-[14px] font-semibold text-white transition-all"
+                    style={{ height: 44, background: C.sage, opacity: isPhoneValid ? 1 : 0.5, cursor: isPhoneValid ? "pointer" : "not-allowed", fontFamily: "'Outfit', sans-serif", letterSpacing: "-0.01em" }}
                   >
                     <span>Join waiting list</span>
                     <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
@@ -348,7 +348,7 @@ export default function LandingPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Your name"
-                    className="w-full rounded-2xl border-none bg-transparent px-4 py-3.5 text-[16px] font-medium outline-none"
+                    className="w-full rounded-2xl border-none bg-transparent px-3.5 py-2.5 text-[14px] font-medium outline-none"
                     style={{ background: C.white, border: `2px solid ${C.border}`, color: C.text, fontFamily: "'Outfit', sans-serif" }}
                   />
                   <input
@@ -357,14 +357,14 @@ export default function LandingPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Email address"
                     onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                    className="w-full rounded-2xl border-none bg-transparent px-4 py-3.5 text-[16px] font-medium outline-none"
+                    className="w-full rounded-2xl border-none bg-transparent px-3.5 py-2.5 text-[14px] font-medium outline-none"
                     style={{ background: C.white, border: `2px solid ${C.border}`, color: C.text, fontFamily: "'Outfit', sans-serif" }}
                   />
                   <button
                     onClick={handleSubmit}
                     disabled={!name.trim() || !email.trim()}
-                    className="flex w-full items-center justify-center gap-2.5 rounded-2xl border-none text-[17px] font-semibold text-white transition-all"
-                    style={{ height: 56, background: C.sage, opacity: (name.trim() && email.trim()) ? 1 : 0.5, cursor: (name.trim() && email.trim()) ? "pointer" : "not-allowed", fontFamily: "'Outfit', sans-serif" }}
+                    className="flex w-full items-center justify-center gap-2.5 rounded-2xl border-none text-[14px] font-semibold text-white transition-all"
+                    style={{ height: 44, background: C.sage, opacity: (name.trim() && email.trim()) ? 1 : 0.5, cursor: (name.trim() && email.trim()) ? "pointer" : "not-allowed", fontFamily: "'Outfit', sans-serif" }}
                   >
                     <span>Join waiting list</span>
                     <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
