@@ -9,11 +9,11 @@ import { useActionState } from "react";
 import { toast } from "@/components/chat/toast";
 
 const AVATARS = [
-  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face",
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
-  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face",
-  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
-  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=80&h=80&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1594381898411-846e7d193883?w=80&h=80&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1550345332-09e3ac987658?w=80&h=80&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=80&h=80&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=80&h=80&fit=crop&crop=face",
 ];
 
 const C = {
