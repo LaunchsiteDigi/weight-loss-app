@@ -293,7 +293,7 @@ export default function LandingPage() {
         <div className="mb-10 grid w-full max-w-[520px] grid-cols-3 gap-3" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.8s both" : "none" }}>
           {features.map((f, i) => (
             <div key={i} className="flex flex-col items-center gap-2 rounded-2xl px-3 py-5" style={{ background: C.white, border: `1.5px solid ${C.border}`, boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}>
-              <div className="flex size-[42px] items-center justify-center rounded-xl" style={{ background: C.sageFaint, border: `1px solid ${C.sagePale}` }}>
+              <div className="flex size-[42px] items-center justify-center">
                 {f.icon}
               </div>
               <span className="text-center text-[13px] font-bold leading-tight" style={{ color: C.text }}>{f.label}</span>
