@@ -228,6 +228,10 @@ export default function LandingPage() {
 
   return (
     <div className="relative flex min-h-dvh w-full items-center justify-center" style={{ background: C.bg, fontFamily: "'Outfit', sans-serif", padding: "60px 24px" }}>
+      {/* Noise texture overlay */}
+      <div className="pointer-events-none fixed inset-0 z-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundRepeat: "repeat", backgroundSize: "256px 256px" }} />
+      {/* Gradient overlay */}
+      <div className="pointer-events-none fixed inset-0 z-0" style={{ background: `radial-gradient(ellipse 80% 60% at 50% 0%, ${C.sagePale}22 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 100%, ${C.sageFaint}33 0%, transparent 60%)` }} />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Sora:wght@400;600;700;800&display=swap');
         @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
@@ -235,9 +239,9 @@ export default function LandingPage() {
         @keyframes dotBounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
       `}</style>
 
-      <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${C.sage}, ${C.sageMid}, ${C.sagePale})` }} />
+      <div className="absolute top-0 left-0 right-0 z-10 h-[3px]" style={{ background: `linear-gradient(90deg, ${C.sage}, ${C.sageMid}, ${C.sagePale})` }} />
 
-      <div className="relative flex w-full max-w-[680px] flex-col items-center text-center" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? "translateY(0)" : "translateY(30px)", transition: "all 1s cubic-bezier(0.16, 1, 0.3, 1)" }}>
+      <div className="relative z-10 flex w-full max-w-[680px] flex-col items-center text-center" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? "translateY(0)" : "translateY(30px)", transition: "all 1s cubic-bezier(0.16, 1, 0.3, 1)" }}>
         {/* Logo */}
         <div className="mb-8 flex items-baseline select-none" style={{ animation: isVisible ? "fadeUp 0.7s ease-out 0.1s both" : "none" }}>
           <span style={{ fontFamily: "'Sora', sans-serif", fontSize: "clamp(36px, 5vw, 48px)", fontWeight: 700, color: C.text, letterSpacing: "-0.04em" }}>SlimZer</span>
